@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS banking.metadata.tables (
     table_id            INT,
     table_name          STRING,
     source_system       STRING,        -- sqlserver / blob
+    source_system_id    INT,           -- sqlserver -> 1, blob ->2 , silver ->3
     source_schema       STRING,        -- dbo (null for blob)
     source_table        STRING,        -- table name (null for blob)
     source_path         STRING,        -- blob path (null for sqlserver)
@@ -113,24 +114,24 @@ CREATE VOLUME IF NOT EXISTS banking.source.volume;
 
 INSERT INTO banking.metadata.tables VALUES
 -- 1. Customers (SQL Server)
-(1, 'customers', 'sqlserver', 'banking', 'customers', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 1, current_timestamp()),
+(1, 'customers', 'sqlserver', 1 ,'banking', 'customers', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 1, current_timestamp()),
 
 -- 2. Accounts (SQL Server)
-(2, 'accounts', 'sqlserver', 'banking', 'accounts', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 2, current_timestamp()),
+(2, 'accounts', 'sqlserver', 1 , 'banking', 'accounts', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 2, current_timestamp()),
 
 -- 3. Transactions (SQL Server)
-(3, 'transactions', 'sqlserver', 'banking', 'transactions', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 3, current_timestamp()),
+(3, 'transactions', 'sqlserver',1 , 'banking', 'transactions', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 3, current_timestamp()),
 
 -- 4. Branches (SQL Server - Full Load)
-(4, 'branches', 'sqlserver', 'banking', 'branches', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 4, current_timestamp()),
+(4, 'branches', 'sqlserver', 1 , 'banking', 'branches', NULL, 'silver', 'bronze', 'silver', NULL, TRUE, 4, current_timestamp()),
 
 -- 5. Credit Bureau Reports (Blob CSV)
-(5, 'credit_bureau_reports', 'blob', NULL, NULL,
+(5, 'credit_bureau_reports', 'blob', 2 , NULL, NULL,
  '/Volumes/banking/source/volume/credit_bureau_reports/', 'silver',
  'bronze', 'silver', NULL, TRUE, 5, current_timestamp()),
 
 -- 6. Payment Gateway Logs (Blob CSV)
-(6, 'payment_gateway_logs', 'blob', NULL, NULL,
+(6, 'payment_gateway_logs', 'blob', 2 , NULL, NULL,
  '/Volumes/banking/source/volume/payment_gateway_logs/', 'silver',
  'bronze', 'silver', NULL, TRUE, 6, current_timestamp());
 
@@ -198,6 +199,7 @@ VALUES (
     7,
     'customer_360',
     'silver',
+    3 ,
     NULL,
     NULL,
     NULL,
@@ -218,6 +220,7 @@ VALUES
 8,
 'branch_performance',
 'silver',
+3 ,
 NULL,
 NULL,
 NULL,
@@ -234,6 +237,7 @@ current_timestamp()
 9,
 'transaction_channel_summary',
 'silver',
+3 ,
 NULL,
 NULL,
 NULL,
@@ -250,6 +254,7 @@ current_timestamp()
 10,
 'daily_bank_kpi',
 'silver',
+3 ,
 NULL,
 NULL,
 NULL,
@@ -269,6 +274,7 @@ VALUES (
     11,
     'risk_customer_summary',
     'silver',
+    3 ,
     NULL,
     NULL,
     NULL,
